@@ -12,6 +12,8 @@ namespace Navigation.Common.Mvc.Filter
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
+            if (actionContext.Request.IsLocal()) return;
+
             if (!SessionHelper.CheckSessionExist("User")) return;
             
             var apiResult = new ApiResult

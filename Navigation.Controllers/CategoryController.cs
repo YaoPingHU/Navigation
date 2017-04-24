@@ -114,7 +114,6 @@ namespace Navigation.Controllers
             category.CategoryName = categoryName;
             category.Sort = sort;
             category.Ico = ico;
-            category.ModifiedOn = DateTime.Now;
 
             var result = _categoryServices.Update_Category(categoryId, CurrentUser.UserId, new
             {

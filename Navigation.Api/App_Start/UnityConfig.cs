@@ -10,7 +10,7 @@ namespace Navigation.Api
     {
         public static void RegisterComponents()
         {
-			var container = new UnityContainer();
+            var container = new UnityContainer();
 
             container.RegisterType<DbService, DbService>(new HierarchicalLifetimeManager());
             container.RegisterType<CategoryServices, CategoryServices>(new HierarchicalLifetimeManager());
@@ -18,5 +18,6 @@ namespace Navigation.Api
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
+
     }
 }
