@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using Navigation.Common.Sugar;
 using Navigation.Model;
 using SqlSugar;
+using Navigation.Common.Extension;
+using Navigation.Model.ViewModel;
 
 namespace Navigation.Services
 {
@@ -35,14 +37,15 @@ namespace Navigation.Services
         #region 查询
 
 
-        public Category Select_Category(int categoryId)
+        public CategoryModel Select_Category(int categoryId)
         {
-            return _dbservice.Queryable<Category>().Where(o => o.CategoryId == categoryId).FirstOrDefault();
+            return _dbservice.Queryable<Category>().Where(o => o.CategoryId == categoryId).FirstOrDefault().MapperTo<Category, CategoryModel>();
         }
 
-        public virtual List<Category> Select_Category(Expression<Func<Category, bool>> filter)
+
+        public virtual List<CategoryModel> Select_Category(Expression<Func<Category, bool>> filter)
         {
-            return _dbservice.Queryable<Category>().Where(filter).OrderBy(o => o.Sort, OrderByType.Desc).ToList();
+            return _dbservice.Queryable<Category>().Where(filter).OrderBy(o => o.Sort, OrderByType.Desc).ToList().MapperTo<Category, CategoryModel>();
         }
 
         public int Select_CategoryCount(Expression<Func<Category, bool>> filter)
@@ -54,19 +57,22 @@ namespace Navigation.Services
 
         #region 修改
 
-
+        public bool Update_Category(int categoryId, int userId, object t)
+        {
+            return _dbservice.Update<Category>(t, o => o.CategoryId == categoryId && o.UserId == userId);
+        }
 
         #endregion
 
         #region 删除
 
-        public bool Delete_Category(int categoryId)
+        public bool Delete_Category(int categoryId, int userId)
         {
             try
             {
                 _dbservice.BeginTran();
-                _dbservice.Delete<Navigate>(o => o.CategoryId == categoryId);
-                _dbservice.Delete<Category>(o => o.CategoryId == categoryId);
+                _dbservice.Delete<Navigate>(o => o.CategoryId == categoryId && o.UserId == userId);
+                _dbservice.Delete<Category>(o => o.CategoryId == categoryId && o.UserId == userId);
                 _dbservice.CommitTran();
                 return true;
             }
